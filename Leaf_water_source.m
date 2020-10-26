@@ -1,6 +1,6 @@
 % Projecting leaf isotope composition onto its rainfall source on the LMWL
 % Paolo Benettin, EPFL, October 2020
-
+%
 % Can we use the isotopic composition of leaf water to help infer plant
 % water origin? This question is investigated using samples from xylem and
 % leaves from a willow tree, collected during the SPIKE II experiment in
