@@ -1,26 +1,41 @@
-% load and process the data to get a clean data table
+function T = data_load_and_process
 
 % some general settings
-tstart=datetime('30-May-2018'); %time after which all sample types were collected
-tstart=datetime('08-May-2018'); %time after which xylem samples were collected
+tstart = datetime('08-May-2018'); %time after which xylem samples were collected
+data_reload = 0; %to reload isotope data from the repository
 
-% load plant isotope data into a table
-T=readtable('data_plant_isotopes_SPIKE_II.csv');
-T=T(T.time>tstart,:);
+% load isotope data from the zenodo repository
+filename = 'data\data_SPIKE_II.csv';
+if ~isfile(filename) || data_reload == 1
+    url = 'https://zenodo.org/record/4037240/files/spike.isotope.II.csv';
+    filename = 'data\data_SPIKE_II.csv';
+    websave(filename,url);
+end
+
+% load plant isotope data into a table and select the variables of interest
+filename = 'data_plant_isotopes_SPIKE_II.csv';
+T=readtable(filename);
+%T.Properties.VariableNames{'TIMESTAMP'} = 'time'; %rename the column
+%q = T.time>tstart & ~cellfun('isempty',regexp(T.Type,('Xylem|Leaf'))); %query
+q = T.time>tstart & ~cellfun('isempty',regexp(T.type,('Xylem|Leaves'))); %query
+T = T(q,:);
 
 % load meteo data
-filename='meteoEPFL_data.dat';
-fid=fopen(filename);
-hdlines=1;
-delim='\t';
-emptval=NaN;
-treatsempty='NA';
-formt='%25s %14.0f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.0f\r\n';
-A=textscan(fid,formt,'Delimiter',delim,'HeaderLines',hdlines,...
-    'TreatAsEmpty',treatsempty,'EmptyValue',emptval,'EndOfLine','\r\n');
-fclose(fid);
-data.time=datenum(A{1},'yyyy-mm-dd HH:MM');
-data.T=A{11}; data.hr=A{12};
+filename = 'meteodata_EPFL.csv';
+data = readtable(filename,'HeaderLines',4);
+
+% filename = 'meteoEPFL_data.dat';
+% fid=fopen(filename);
+% hdlines=1;
+% delim='\t';
+% emptval=NaN;
+% treatsempty='NA';
+% formt='%25s %14.0f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.0f\r\n';
+% A=textscan(fid,formt,'Delimiter',delim,'HeaderLines',hdlines,...
+%     'TreatAsEmpty',treatsempty,'EmptyValue',emptval,'EndOfLine','\r\n');
+% fclose(fid);
+% data.time=datenum(A{1},'yyyy-mm-dd HH:MM');
+% data.T=A{11}; data.rh=A{12};
 
 % clean and prepare the data
 %remove a contaminated sample 
@@ -38,16 +53,17 @@ T.datecount=icsorted(tmpind); %give the same ordering as the original T.time vec
 delt1=24/24; %delta [days] prior to sampling date (shorter interval, hours to days)
 delt2=30; %delta [days] prior to sampling date (longer interval, weeks to months)
 T.Tday=zeros(size(T,1),1); %preallocate
-T.hrday=zeros(size(T,1),1);
+T.rhday=zeros(size(T,1),1);
 T.Tmonth=zeros(size(T,1),1);
-T.hrmonth=zeros(size(T,1),1);
+T.rhmonth=zeros(size(T,1),1);
 for i=1:size(T,1)
-    q = data.time>=datenum(T.time(i))-delt1 & data.time<=datenum(T.time(i));
+    q = data.time >= T.time(i)-delt1 & data.time <= T.time(i);
     T.Tday(i)=mean(data.T(q));
-    T.hrday(i)=mean(data.hr(q));
-    q = data.time>=datenum(T.time(i))-delt2 & data.time<=datenum(T.time(i));
+    T.rhday(i)=mean(data.rh(q));
+    q = data.time >= T.time(i)-delt2 & data.time <= T.time(i);
     T.Tmonth(i)=mean(data.T(q));
-    T.hrmonth(i)=mean(data.hr(q));
+    T.rhmonth(i)=mean(data.rh(q));
 end
 
+end
 

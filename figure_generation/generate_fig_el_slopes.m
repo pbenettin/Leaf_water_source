@@ -1,16 +1,16 @@
 % figures showing the distribution of evaporation line slopes
 
 % choose a day and show xylem and leaf evaporation slope distributions
-sel_list = datetime({'04-Jun-2018 14:35','26-Jun-2018 14:15'});
-sel_list = [T.time(35),T.time(100)];
+sel_list = datetime({'14-Jun-2018 15:15','29-Jun-2018 15:00'});
+%sel_list = [T.time(35),T.time(100)];
 
 % show the parameters used to run the Craig-Gordon model for the first
 % sample
 sel = sel_list(1);
 s = find(T.time == sel,1,'first'); %selection of the sample
 fprintf('Example of input parameters for sample on %s:\n',T.time(s))
-fprintf('{h month} in [%.2f, %.2f]\n',T.hrmonth(s)+min(dhr_list)*100,T.hrmonth(s)+max(dhr_list)*100);
-fprintf('{h day} in [%.2f, %.2f]\n',T.hrday(s)+min(dhr_list)*100,T.hrday(s)+max(dhr_list)*100);
+fprintf('{h month} in [%.2f, %.2f]\n',T.rhmonth(s)+min(dhr_list)*100,T.rhmonth(s)+max(dhr_list)*100);
+fprintf('{h day} in [%.2f, %.2f]\n',T.rhday(s)+min(dhr_list)*100,T.rhday(s)+max(dhr_list)*100);
 fprintf('{T month} in [%.2f, %.2f]\n',T.Tmonth(s)+min(dT_list),T.Tmonth(s)+max(dT_list));
 fprintf('{T day} in [%.2f, %.2f]\n',T.Tday(s)+min(dT_list),T.Tday(s)+max(dT_list));
 fprintf('{k atmosphere} in [%.2f, %.2f]\n',min(k_list),max(k_list));

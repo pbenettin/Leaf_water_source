@@ -27,8 +27,8 @@ flag_theory = 1; %show theory or not
 % -------------------------------------------------------------------------
 % - LOAD AND PRE-PROCESS THE DATA
 % -------------------------------------------------------------------------
-% load and process data using an external function
-T = data_load_and_process;
+% load and process the data 
+T = data_load_and_process; %using an external function
 
 % show the isotope data collected during the 43-days experiment
 run('generate_fig_data')
@@ -77,7 +77,7 @@ A_X = source_sampler_iter(xylem_sample,...
     d_o_par,lmwl_par,sigma_H_lmwl,slope_pdf,ngens);
 
 % make a dual isotope plot with the projection
-run('generate_fig_projexample')
+run('generate_fig_theory')
 
 % Comments: The plot above shows that the potential sources of leaf water
 % are more uncertain, but they point to the same potential sources as xylem
@@ -151,9 +151,9 @@ for i=1:size(T,1)
     % generate a slope distribution by running the CG model for multiple input parameter combinations
     switch T.type{i}
         case {'Xylem','Phloem'}
-            sl = montecarloCG(n_list_s,T.hrmonth(i)+dhr_list,T.Tmonth(i)+dT_list,k_list,iso_source,flag_method,x_s);
+            sl = montecarloCG(n_list_s,T.rhmonth(i)+dhr_list,T.Tmonth(i)+dT_list,k_list,iso_source,flag_method,x_s);
         case 'Leaves'            
-            sl = montecarloCG(n_list_l,T.hrday(i) + dhr_list,T.Tday(i) + dT_list,k_list,iso_source,flag_method,x_l);
+            sl = montecarloCG(n_list_l,T.rhday(i) + dhr_list,T.Tday(i) + dT_list,k_list,iso_source,flag_method,x_l);
     end
     
     % fit a distribution to the empirical slope distribution
@@ -194,10 +194,10 @@ end
 % -------------------------------------------------------------------------
 
 % First show an example of evaporation line slopes
-run('generate_figures_el_slopes')
+run('generate_fig_el_slopes')
 
 % Then show results for all samples (day and night). 
-run('generate_figures_1')
+run('generate_fig_projection')
 % Comment: despite the uncertainty, the trend in the probable xylem source
 % is quite well mimicked by the probable leaf sources. However, there are
 % patterns in mid-June that we cannot explain so far. Note this is a period

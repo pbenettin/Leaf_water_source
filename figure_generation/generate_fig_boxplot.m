@@ -75,7 +75,8 @@ xlabel('sample number')
 
 % workaround to add a legend
 tmp = findall(gca,'Tag','Box');
-hLegend = legend([tmp(1),tmp(1+26),tmp(1+26*2)],{'Xylem','Phloem','Leaves'});
+%hLegend = legend([tmp(1),tmp(1+26),tmp(1+26*2)],{'Xylem','Phloem','Leaves'});
+hLegend = legend([tmp(1),tmp(1+26)],{'Xylem','Leaves'});
 
 % reset the axes size
 set(axl,'Position',posl);
