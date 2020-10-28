@@ -57,11 +57,11 @@ if flag_theory == 1
 % Illustrate the methodology
 
 % select samples of xylem and leaf water on the same day
-q = T.time == datetime('04-June-2018 14:35'); %just the selction of one day
-leaf_sample = [T.d18O(q & strcmp(T.type,'Leaves')),...
-    T.d2H(q & strcmp(T.type,'Leaves'))]; %d18O, d2H
-xylem_sample = [T.d18O(q & strcmp(T.type,'Xylem')),...
-    T.d2H(q & strcmp(T.type,'Xylem'))]; %d18O, d2H
+q = T.time == datetime('04-June-2018 13:35'); %just the selction of one day
+leaf_sample = [T.d18O(q & strcmp(T.Type,'Leaves')),...
+    T.d2H(q & strcmp(T.Type,'Leaves'))]; %d18O, d2H
+xylem_sample = [T.d18O(q & strcmp(T.Type,'Xylem')),...
+    T.d2H(q & strcmp(T.Type,'Xylem'))]; %d18O, d2H
 
 % some example settings for the fractionation removal 
 ngens=200; %number of generated samples
@@ -149,7 +149,7 @@ T.stdpH = zeros(size(T,1),1); %preallocate a column for the std hydrogen source
 for i=1:size(T,1)
     
     % generate a slope distribution by running the CG model for multiple input parameter combinations
-    switch T.type{i}
+    switch T.Type{i}
         case {'Xylem','Phloem'}
             sl = montecarloCG(n_list_s,T.rhmonth(i)+dhr_list,T.Tmonth(i)+dT_list,k_list,iso_source,flag_method,x_s);
         case 'Leaves'            
@@ -164,7 +164,7 @@ for i=1:size(T,1)
     % store slope distribution in a table and append to main table
     tmp=table;
     tmp.time = repmat(T.time(i),length(sl),1);
-    tmp.type = repmat(T.type(i),length(sl),1);
+    tmp.type = repmat(T.Type(i),length(sl),1);
     tmp.slope = sl;    
     tbl_slope = vertcat(tbl_slope,tmp);
     
@@ -174,7 +174,7 @@ for i=1:size(T,1)
     % store sources in a table and append to main table
     tmp=table;
     tmp.time = repmat(T.time(i),length(src),1);
-    tmp.type = repmat(T.type(i),length(src),1);
+    tmp.type = repmat(T.Type(i),length(src),1);
     tmp.d18O = src(:,1);    
     tmp.d2H = src(:,2);    
     tbl_source = vertcat(tbl_source,tmp);
@@ -217,9 +217,9 @@ nn=0;
 for i = unique(T.datecount(q))'
     nn=nn+1;
     % check which samples are available
-    tmp1 = T.datecount == i & strcmp(T.type,'Xylem');
-    tmp2 = T.datecount == i & strcmp(T.type,'Phloem');
-    tmp3 = T.datecount == i & strcmp(T.type,'Leaves');
+    tmp1 = T.datecount == i & strcmp(T.Type,'Xylem');
+    tmp2 = T.datecount == i & strcmp(T.Type,'Phloem');
+    tmp3 = T.datecount == i & strcmp(T.Type,'Leaves');
     
     % compute the difference among the mean sources  
     if sum(tmp1) ~= 0 && sum(tmp2) ~= 0

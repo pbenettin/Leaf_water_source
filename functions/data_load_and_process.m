@@ -13,33 +13,22 @@ if ~isfile(filename) || data_reload == 1
 end
 
 % load plant isotope data into a table and select the variables of interest
-filename = 'data_plant_isotopes_SPIKE_II.csv';
+filename = 'temp_spike.isotope.II.csv';
 T=readtable(filename);
-%T.Properties.VariableNames{'TIMESTAMP'} = 'time'; %rename the column
-%q = T.time>tstart & ~cellfun('isempty',regexp(T.Type,('Xylem|Leaf'))); %query
-q = T.time>tstart & ~cellfun('isempty',regexp(T.type,('Xylem|Leaves'))); %query
-T = T(q,:);
+
+% simplify the naming
+T.Properties.VariableNames{'TIMESTAMP'} = 'time';
+T.Properties.VariableNames{'d18O_UoS'} = 'd18O';
+T.Properties.VariableNames{'d2H_UoS'} = 'd2H';
+T.Type(~cellfun('isempty',regexp(T.Type,('Xylem'))),:) = {'Xylem'};
+
+% simplify the data: select a few columns and xylem and leaf data only
+q = T.time>tstart & (strcmp(T.Type,'Xylem') | strcmp(T.Type,'Leaves')); %query
+T = T(q,{'Type','time','d18O','d2H'});
 
 % load meteo data
 filename = 'meteodata_EPFL.csv';
 data = readtable(filename,'HeaderLines',4);
-
-% filename = 'meteoEPFL_data.dat';
-% fid=fopen(filename);
-% hdlines=1;
-% delim='\t';
-% emptval=NaN;
-% treatsempty='NA';
-% formt='%25s %14.0f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.2f %14.0f\r\n';
-% A=textscan(fid,formt,'Delimiter',delim,'HeaderLines',hdlines,...
-%     'TreatAsEmpty',treatsempty,'EmptyValue',emptval,'EndOfLine','\r\n');
-% fclose(fid);
-% data.time=datenum(A{1},'yyyy-mm-dd HH:MM');
-% data.T=A{11}; data.rh=A{12};
-
-% clean and prepare the data
-%remove a contaminated sample 
-T(T.time=='23-Jun-2018 10:10:00',:)=[]; %this was influenced by the previous mushroom measurement
 
 % create an index to tell whether measurements refer to the same sampling
 % time (useful to identify replicate samples)

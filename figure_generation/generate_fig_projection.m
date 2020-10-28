@@ -29,7 +29,7 @@ if flag_plotall == 1
     sp1=subplot(2,2,1);
     hold all
     for i=[1,3]
-        qq = q & strcmp(T.type,style{i}{7}); %select each sample type
+        qq = q & strcmp(T.Type,style{i}{7}); %select each sample type
         plot(datenum(T.time(qq)),T.d18O(qq),... 
             style{i}{1},'LineStyle',style{i}{2},'MarkerSize',style{i}{3},'Color',style{i}{6},...
             'DisplayName',style{i}{7})
@@ -45,7 +45,7 @@ if flag_plotall == 1
     sp2=subplot(2,2,2);
     hold all
     for i=[1,3]
-        qq = q & strcmp(T.type,style{i}{7}); %select each sample type
+        qq = q & strcmp(T.Type,style{i}{7}); %select each sample type
         plot(datenum(T.time(qq)),T.d2H(qq),... 
             style{i}{1},'LineStyle',style{i}{2},'MarkerSize',style{i}{3},'Color',style{i}{6},...
             'DisplayName',style{i}{7})
@@ -60,7 +60,7 @@ if flag_plotall == 1
     sp3=subplot(2,2,3);
     hold all
     for i=[1,3]
-        qq = q & strcmp(T.type,style{i}{7}); %select each sample type
+        qq = q & strcmp(T.Type,style{i}{7}); %select each sample type
         errorbar(datenum(T.time(qq)),T.mpO(qq),T.stdpO(qq),... 
             style{i}{1},'LineStyle',style{i}{2},'MarkerSize',style{i}{3},'Color',style{i}{6},...
             'DisplayName',style{i}{7})
@@ -76,7 +76,7 @@ if flag_plotall == 1
     sp4=subplot(2,2,4);
     hold all
     for i=[1,3]
-        qq = q & strcmp(T.type,style{i}{7}); %select each sample type
+        qq = q & strcmp(T.Type,style{i}{7}); %select each sample type
         errorbar(datenum(T.time(qq)),T.mpH(qq),T.stdpH(qq),... 
             style{i}{1},'LineStyle',style{i}{2},'MarkerSize',style{i}{3},'Color',style{i}{6},...
             'DisplayName',style{i}{7})
@@ -106,7 +106,7 @@ if flag_plotdetail == 1
     subplot(1,2,1)
     hold all
     for i=[1,3]
-        qq = q & strcmp(T.type,style{i}{7}); %select each sample type
+        qq = q & strcmp(T.Type,style{i}{7}); %select each sample type
         errorbar(datenum(T.time(qq)),T.mpO(qq),T.stdpO(qq),... 
             style{i}{1},'LineStyle',style{i}{2},'MarkerSize',style{i}{3},'Color',style{i}{6},...
             'DisplayName',style{i}{7})
@@ -124,7 +124,7 @@ if flag_plotdetail == 1
     subplot(1,2,2)
     hold all
     for i=[1,3]
-        qq = q & strcmp(T.type,style{i}{7}); %select each sample type
+        qq = q & strcmp(T.Type,style{i}{7}); %select each sample type
         errorbar(datenum(T.time(qq)),T.mpH(qq),T.stdpH(qq),... 
             style{i}{1},'LineStyle',style{i}{2},'MarkerSize',style{i}{3},'Color',style{i}{6},...
             'DisplayName',style{i}{7})
@@ -155,7 +155,7 @@ if flag_plotdualisotope == 1
     tmp=find(T.time>datetime('28-May-2018'),1,'first'); %select period when all sample types are available
     for j=tmp:size(T,1)
         % set the appropriate colors
-        switch T.type{j}
+        switch T.Type{j}
             case 'Xylem'
                 col = [1 .7 .4];
             case 'Leaves'
@@ -173,7 +173,7 @@ if flag_plotdualisotope == 1
     % plot measurements
     q = T.time>datetime('28-May-2018');
     for i=[1,3] %skip phloem for now
-        qq = q & strcmp(T.type,style{i}{7}); %select each sample type
+        qq = q & strcmp(T.Type,style{i}{7}); %select each sample type
         plot(datenum(T.d18O(qq)),T.d2H(qq),... 
             style{i}{1},'LineStyle','none','MarkerSize',style{i}{3},'Color',style{i}{6},...
             'DisplayName',style{i}{7})

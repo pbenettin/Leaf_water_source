@@ -26,7 +26,7 @@ month_data_18O=reshape(T2.O18,12,27)';
 month_data_2H=reshape(T2.H2,12,27)';
 
 % settings
-q = tbl_source.time > datetime('30-May-2018'); % phloem not available in the first two dates
+q = tbl_source.time > datetime('30-May-2018'); 
 %q = tbl_source.time > datetime('03-Jun-2018'); % all samples are available
 %poss=unique(tbl_source.datecount(q));
 pstyle='traditional'; %'traditional' or 'compact'
@@ -58,11 +58,11 @@ set(fbox, 'currentaxes', axr);
 qq = q & strcmp(tbl_source.type,'Leaves');
 poss=unique(tbl_source.datecount(qq));
 boxplot(tbl_source.d18O(qq),tbl_source.datecount(qq),...
-    'Positions',poss,    'Colors',col_L,'Symbol','+','OutlierSize',otsize,'PlotStyle',pstyle,'BoxStyle',bstyle)
-qq = q & strcmp(tbl_source.type,'Phloem');
-poss=unique(tbl_source.datecount(qq));
-boxplot(tbl_source.d18O(qq),tbl_source.datecount(qq),...
-    'Positions',poss+0.2,'Colors',col_P,'Symbol','+','OutlierSize',otsize,'PlotStyle',pstyle,'BoxStyle',bstyle)
+    'Positions',poss+0.2,    'Colors',col_L,'Symbol','+','OutlierSize',otsize,'PlotStyle',pstyle,'BoxStyle',bstyle)
+% qq = q & strcmp(tbl_source.type,'Phloem');
+% poss=unique(tbl_source.datecount(qq));
+% boxplot(tbl_source.d18O(qq),tbl_source.datecount(qq),...
+%     'Positions',poss+0.2,'Colors',col_P,'Symbol','+','OutlierSize',otsize,'PlotStyle',pstyle,'BoxStyle',bstyle)
 qq = q & strcmp(tbl_source.type,'Xylem');
 poss=unique(tbl_source.datecount(qq));
 boxplot(tbl_source.d18O(qq),tbl_source.datecount(qq),...

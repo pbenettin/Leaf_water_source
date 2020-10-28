@@ -1,7 +1,9 @@
 % figures showing the distribution of evaporation line slopes
 
 % choose a day and show xylem and leaf evaporation slope distributions
-sel_list = datetime({'14-Jun-2018 15:15','29-Jun-2018 15:00'});
+sel_list = datetime({...
+    '14-Jun-2018 14:15',...
+    '26-Jun-2018 13:15'});
 %sel_list = [T.time(35),T.time(100)];
 
 % show the parameters used to run the Craig-Gordon model for the first
