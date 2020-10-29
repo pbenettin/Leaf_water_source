@@ -7,8 +7,6 @@ col_P=[1 .8 0];
 col_L=[.2 .3 .2];
 col_Rain=[0,0,1];
 
-% need to first run the plant isotope source file
-
 % get to mean leman data
 % download data from IAEA/WMO(2020): Global network of isotopes in
 % precipitation. The GNIP database. Accessible at:
@@ -25,10 +23,12 @@ T2.Date=datetime(T2.Date,'InputFormat','yyyy-MM-dd');
 month_data_18O=reshape(T2.O18,12,27)';
 month_data_2H=reshape(T2.H2,12,27)';
 
-% settings
-q = tbl_source.time > datetime('30-May-2018'); 
-%q = tbl_source.time > datetime('03-Jun-2018'); % all samples are available
-%poss=unique(tbl_source.datecount(q));
+% select data to show in the plot (retain dates where both xylem and leaves
+% are available)
+q = tbl_source.time > datetime('30-May-2018')... 
+    & tbl_source.time ~= datetime('23-Jun-2018 09:10:00'); 
+
+% plot settings
 pstyle='traditional'; %'traditional' or 'compact'
 bstyle='filled'; %'filled' or 'outline'
 otsize=2; 

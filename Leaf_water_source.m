@@ -9,7 +9,7 @@
 % The code is organized as follows:
 % - load, and pre-process the data
 % - (optional) theory
-% - run the sample projection on all the samples
+% - run the sample projection on all samples
 % - analyze the results through plots
 %--------------------------------------------------------------------------
 
@@ -115,12 +115,12 @@ ngens=100; %number of generated samples
 lmwl_par=[8.27,11.41]; %slope and intercept of the LMWL
 sigma_H_lmwl=1; %expected variability (std) in the d2H of the mixed sources
 d_o_par=[0.12,0.81,.5]; %sample std dO18, std d2H and correlation
-iso_source=[-11,-79.6]; %an example starting point on the LMWL
+iso_source=[-11,-79.6]; %a reference starting point that belongs to the LMWL
 flag_method=2; %lake reaching steady-state
 nval=10; %number of tested values for each parameter
 N=nval^4; %total parameter combinations
 
-% Input parameter combinations (common to soil or leaves):
+% Input parameter ranges (here the ones shared by soil and leaf samples):
 dhr_list=linspace(-0.1,+0.1,nval); %spans a +- deviation from the measurement
 dT_list=linspace(-3,+3,nval); %spans a +- deviation from the measurement
 k_list=linspace(0.75,1,nval);
@@ -129,11 +129,11 @@ k_list=linspace(0.75,1,nval);
 n_list_s=linspace(0.75,1,nval); %this is specific to soil
 x_s=[0,0.3]; %ratio evaporation to other outfluxes (does not really affect the results)
 
-% Leaf-specific settngs
+% Leaf-specific settings
 n_list_l=linspace(0.85,1,nval); %this is specific to leaves
 x_l=[0,1]; %ratio evaporation to other outfluxes (does not really affect the results)
 
-% build 2 new data tables and update T
+% build 2 new data tables and update T:
 % - a datatable with the distribution of slopes for each sample
 % - a datatable with all possible sources for each sample
 % - update the original datatable T with the mean slope and mean and std of the projection
@@ -196,7 +196,7 @@ end
 % First show an example of evaporation line slopes
 run('generate_fig_el_slopes')
 
-% Then show results for all samples (day and night). 
+% Then show results for all samples 
 run('generate_fig_projection')
 % Comment: despite the uncertainty, the trend in the probable xylem source
 % is quite well mimicked by the probable leaf sources. However, there are
@@ -212,27 +212,18 @@ run('generate_fig_projection')
 q = T.time >= '30-may-2018'; %before this date only xylem was collected
 Nres = length(unique(T.datecount(q)));
 resdates = unique(T.time(q));
-res=NaN(Nres,6); %matrix to store the residuals (% [d18O and d2H] of Phloem-Xylem, Leaves-Xylem, Leaves-Phloem
+res=NaN(Nres,2); %matrix to store the residuals (% [d18O and d2H] of Leaves-Xylem
 nn=0;
 for i = unique(T.datecount(q))'
     nn=nn+1;
     % check which samples are available
     tmp1 = T.datecount == i & strcmp(T.Type,'Xylem');
-    tmp2 = T.datecount == i & strcmp(T.Type,'Phloem');
     tmp3 = T.datecount == i & strcmp(T.Type,'Leaves');
     
     % compute the difference among the mean sources  
-    if sum(tmp1) ~= 0 && sum(tmp2) ~= 0
-        res(nn,1) = mean(T.mpO(tmp2))-mean(T.mpO(tmp1));
-        res(nn,2) = mean(T.mpH(tmp2))-mean(T.mpH(tmp1));
-    end
     if sum(tmp1) ~= 0 && sum(tmp3) ~= 0
-        res(nn,3) = mean(T.mpO(tmp3))-mean(T.mpO(tmp1));
-        res(nn,4) = mean(T.mpH(tmp3))-mean(T.mpH(tmp1));
-    end
-    if sum(tmp2) ~= 0 && sum(tmp3) ~= 0
-        res(nn,5) = mean(T.mpO(tmp3))-mean(T.mpO(tmp2));
-        res(nn,6) = mean(T.mpH(tmp3))-mean(T.mpH(tmp2));
+        res(nn,1) = mean(T.mpO(tmp3))-mean(T.mpO(tmp1));
+        res(nn,2) = mean(T.mpH(tmp3))-mean(T.mpH(tmp1));
     end
 end
 
@@ -241,22 +232,19 @@ mres = nanmean(res);
 stdres = nanstd(res);
 
 % display something
-fprintf('mean res (d18O,d2H) L-X: %.2f, %.2f\n',mres([3,4]))
-fprintf('std res (d18O,d2H) L-X: %.2f, %.2f\n',stdres([3,4]))
+fprintf('mean res (d18O,d2H) L-X: %.2f, %.2f\n',mres([1,2]))
+fprintf('std res (d18O,d2H) L-X: %.2f, %.2f\n',stdres([1,2]))
 
 % pass unique sampling days to the source table
 tbl_source = join(tbl_source, unique(T(:,{'time','datecount'})));
 
 % generate a figure with the residuals
 run('generate_fig_residuals')
-
-% The residuals' timeseries (above) shows that: leaf-xylem and leaf-phloem
-% difference (red and yellow curves) are: Average: 0.3permil
-% $\delta^{18}O$, 2.3permil in $\delta^{2}H$, standar deviations: 0.8permil
-% $\delta^{18}O$, 6.9permil in $\delta^{2}H$. There is a sistematic error
-% around June 20th, possibly reflecting the very dry conditions of those
-% days.
-
+% comments: the residuals' timeseries (above) shows that the residuals of the
+% projected leaf-xylem values have: Average: 2.3permil $\delta^{2}H$,
+% standar deviations: 0.8permil $\delta^{18}O$, 6.9permil in $\delta^{2}H$.
+% There is a sistematic error around June 20th, possibly related to the
+% very dry conditions around those days.
 
 % The uncertainty on the mean origin is further explored using boxplot (on
 % $\delta^{18}O$ only, for simplicity) and it is compared with typical

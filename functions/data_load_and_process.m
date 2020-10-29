@@ -1,20 +1,16 @@
 function T = data_load_and_process
 
 % some general settings
-tstart = datetime('08-May-2018'); %time after which xylem samples were collected
-data_reload = 0; %to reload isotope data from the repository
-
-% load isotope data from the zenodo repository
-filename = 'data\data_SPIKE_II.csv';
-if ~isfile(filename) || data_reload == 1
-    url = 'https://zenodo.org/record/4037240/files/spike.isotope.II.csv';
-    filename = 'data\data_SPIKE_II.csv';
-    websave(filename,url);
-end
+data_download = 0; %to reload isotope data from the repository
 
 % load plant isotope data into a table and select the variables of interest
-filename = 'temp_spike.isotope.II.csv';
-T=readtable(filename);
+% (with download from the zenodo repository if needed)
+filename = 'data\temp_spike.isotope.II.csv';
+if ~isfile(filename) || data_download == 1
+    url = 'https://zenodo.org/record/4037240/files/spike.isotope.II.csv';
+    websave(filename,url);
+end
+T=readtable(filename,'TreatAsEmpty','NA');
 
 % simplify the naming
 T.Properties.VariableNames{'TIMESTAMP'} = 'time';
@@ -22,8 +18,9 @@ T.Properties.VariableNames{'d18O_UoS'} = 'd18O';
 T.Properties.VariableNames{'d2H_UoS'} = 'd2H';
 T.Type(~cellfun('isempty',regexp(T.Type,('Xylem'))),:) = {'Xylem'};
 
-% simplify the data: select a few columns and xylem and leaf data only
-q = T.time>tstart & (strcmp(T.Type,'Xylem') | strcmp(T.Type,'Leaves')); %query
+% simplify the data: select variables from xylem and leaf samples only
+q = T.time>datetime('08-May-2018')...
+    & (strcmp(T.Type,'Xylem') | strcmp(T.Type,'Leaves')); %query
 T = T(q,{'Type','time','d18O','d2H'});
 
 % load meteo data
@@ -46,9 +43,11 @@ T.rhday=zeros(size(T,1),1);
 T.Tmonth=zeros(size(T,1),1);
 T.rhmonth=zeros(size(T,1),1);
 for i=1:size(T,1)
+    % delt1 interval
     q = data.time >= T.time(i)-delt1 & data.time <= T.time(i);
     T.Tday(i)=mean(data.T(q));
     T.rhday(i)=mean(data.rh(q));
+    % delt2 interval
     q = data.time >= T.time(i)-delt2 & data.time <= T.time(i);
     T.Tmonth(i)=mean(data.T(q));
     T.rhmonth(i)=mean(data.rh(q));
