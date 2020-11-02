@@ -5,7 +5,7 @@ data_download = 0; %to reload isotope data from the repository
 
 % load plant isotope data into a table and select the variables of interest
 % (with download from the zenodo repository if needed)
-filename = 'data\temp_spike.isotope.II.csv';
+filename = 'data\spike.isotope.II.csv';
 if ~isfile(filename) || data_download == 1
     url = 'https://zenodo.org/record/4037240/files/spike.isotope.II.csv';
     websave(filename,url);

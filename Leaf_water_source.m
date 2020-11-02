@@ -81,7 +81,7 @@ run('generate_fig_theory')
 
 % Comments: The plot above shows that the potential sources of leaf water
 % are more uncertain, but they point to the same potential sources as xylem
-% water. Indeed, the most probable (mean) sources are rater close in this
+% water. Indeed, the most probable (mean) sources are rather close in this
 % case.
 
 end
