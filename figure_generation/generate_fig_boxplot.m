@@ -25,8 +25,9 @@ month_data_2H=reshape(T2.H2,12,27)';
 
 % select data to show in the plot (retain dates where both xylem and leaves
 % are available)
-q = tbl_source.time > datetime('30-May-2018')... 
-    & tbl_source.time ~= datetime('23-Jun-2018 09:10:00'); 
+% q = tbl_source.time > datetime('30-May-2018')... %leaves unavailable before May 30
+%     & tbl_source.time ~= datetime('23-Jun-2018 09:10:00'); %leaf unavailable here
+q = tbl_source.time > datetime('30-May-2018');
 
 % plot settings
 pstyle='traditional'; %'traditional' or 'compact'
@@ -71,7 +72,7 @@ title('Inferred sources')
 set(gca,'TickDir','out','box','on','YLim',yl)
 %grid on
 ylabel(['\delta^{18}O [',char(8240),']'])
-xlabel('sample number')
+xlabel('sample ID')
 
 % workaround to add a legend
 tmp = findall(gca,'Tag','Box');

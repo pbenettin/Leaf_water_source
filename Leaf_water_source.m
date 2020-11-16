@@ -25,7 +25,7 @@ addpath('figure_generation')
 flag_theory = 1; %show theory or not
 
 % -------------------------------------------------------------------------
-% - LOAD AND PRE-PROCESS THE DATA
+% # LOAD AND PRE-PROCESS THE DATA
 % -------------------------------------------------------------------------
 % load and process the data 
 T = data_load_and_process; %using an external function
@@ -34,7 +34,7 @@ T = data_load_and_process; %using an external function
 run('generate_fig_data')
 
 % -------------------------------------------------------------------------
-% - THEORY: show how we can remove the effect of evaporative fractionation
+% # THEORY: show how we can remove the effect of evaporative fractionation
 % -------------------------------------------------------------------------
 % If we can characterize the evaporative fractionation trajectory of leaf
 % waters, then we can remove the effect of fractionation and trace a sample
@@ -87,7 +87,7 @@ run('generate_fig_theory')
 end
 
 % -------------------------------------------------------------------------
-% - RUN THE SAMPLE PROJECTION ON ALL THE SAMPLES
+% # RUN THE SAMPLE PROJECTION ON ALL THE SAMPLES
 % -------------------------------------------------------------------------
 % Use the same approach for all the available samples and extract the mean
 % and standard deviation of the projected sources.
@@ -190,7 +190,7 @@ for i=1:size(T,1)
 end
 
 % -------------------------------------------------------------------------
-% - ANALYZE THE RESULTS THROUGH PLOTS
+% # ANALYZE RESULTS THROUGH PLOTS
 % -------------------------------------------------------------------------
 
 % First show an example of evaporation line slopes
@@ -239,7 +239,8 @@ fprintf('std res (d18O,d2H) L-X: %.2f, %.2f\n',stdres([1,2]))
 tbl_source = join(tbl_source, unique(T(:,{'time','datecount'})));
 
 % generate a figure with the residuals
-run('generate_fig_residuals')
+%run('generate_fig_residuals') %figure not shown in the paper
+
 % comments: the residuals' timeseries (above) shows that the residuals of the
 % projected leaf-xylem values have: Average: 2.3permil $\delta^{2}H$,
 % standar deviations: 0.8permil $\delta^{18}O$, 6.9permil in $\delta^{2}H$.
